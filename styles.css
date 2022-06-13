@@ -1,5 +1,65 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  /* border: 1px solid blue; */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 1rem; /* 16px */
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: #8ecae6;
+}
+
+main {
+  display: none;
+}
+
+button {
+  padding: 0.5em 0.65em;
+  border-radius: 10px;
+  background-color: white;
+  color: #023047;
+  border: 2px solid #023047;
+}
+
+.select-player-container {
+  height: 80vh;
+  width: 35vw;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3em;
+}
+
+.select-text,
+.title {
+  text-align: center;
+  font-weight: bold;
+  color: #023047;
+}
+
+.select-text {
+  font-size: 1.5rem;
+}
+
+.title {
+  margin-top: 0.7em;
+}
+
+.button-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
 .container {
-  margin-top: 100px;
+  margin-top: 50px;
   width: 500px;
   height: 500px;
   display: grid;
@@ -10,7 +70,6 @@
 }
 
 .container > div {
-  background: #9e9e9e;
   border: black 1px solid;
 }
 
@@ -23,4 +82,67 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* Remove the border around the edges */
+.square:nth-child(3n - 2) {
+  border-left: none;
+}
+
+.square:nth-child(3n) {
+  border-right: none;
+}
+
+.square:nth-child(n + 7) {
+  border-bottom: none;
+}
+
+.square:nth-child(-n + 3) {
+  border-top: none;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 1.25em 0;
+  border: 1px solid #888;
+  width: 30%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+
+/* Responsive Styles */
+@media screen and (min-width: 320px) {
+  html {
+    font-size: calc(16px + 6 * ((100vw - 320px) / 680));
+  }
+}
+@media screen and (max-width: 800px) {
+  .button-container {
+    flex-direction: column;
+    gap: 2em;
+  }
+}
+@media screen and (min-width: 1000px) {
+  html {
+    font-size: 22px;
+  }
 }
