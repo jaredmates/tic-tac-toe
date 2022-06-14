@@ -1,26 +1,3 @@
-let players = {
-  player1: "X",
-  player2: "O",
-};
-
-function displayController(el) {
-  // display X or O on square
-  el.textContent = user;
-  // container.appendChild(el);
-  switchValue();
-}
-
-function switchValue() {
-  if (user === "X") {
-    user = "O";
-  } else {
-    user = "X";
-  }
-}
-
-const selectPlayerContainer = document.querySelector(
-  ".select-player-container"
-);
 const mainContent = document.querySelector("main");
 const container = document.querySelector(".container");
 const squares = document.querySelectorAll(".square");
@@ -28,32 +5,102 @@ const playerOne = document.querySelector(".one");
 const playerTwo = document.querySelector(".two");
 const gameResult = document.querySelector(".game-result");
 const modal = document.getElementById("myModal");
+const content = document.querySelector(".close");
+const selectPlayerContainer = document.querySelector(
+  ".select-player-container"
+);
 
+const gameBoard = [];
+
+let draw = 0;
 let user;
-let opponent;
+
+let players = {
+  player1: "X",
+  player2: "O",
+};
+
+// Creates Reset Button that appears at the end
+content.addEventListener("click", () => {
+  location.reload();
+});
 
 playerOne.addEventListener("click", () => {
   user = players.player1;
-  opponent = players.player2;
   hideStartScreen();
 });
 
 playerTwo.addEventListener("click", () => {
   user = players.player2;
-  opponent = players.player1;
   hideStartScreen();
 });
 
-squares.forEach((square) => {
-  // and for each one we add a 'click' listener
-  square.addEventListener("click", (e) => {
-    if (square.textContent.trim() === "") {
-      displayController(e.target);
-    } else {
+squares.forEach((square, id) => {
+  square.addEventListener("click", squareClicked);
+});
+// }
+
+function squareClicked(e) {
+  const id = e.target.id;
+  console.log(e);
+  if (!gameBoard[id]) {
+    gameBoard[id] = user;
+    draw++;
+    e.target.textContent = user;
+    console.log(draw);
+    if (userWon()) {
+      console.log(draw);
+      activateModal();
       return;
     }
-  });
-});
+    if (draw === 9) {
+      activateModal();
+      return;
+    }
+    switchUserValue();
+  }
+}
+
+function userWon() {
+  if (gameBoard[0] === user) {
+    if (gameBoard[1] === user && gameBoard[2] === user) {
+      return true;
+    }
+    if (gameBoard[3] === user && gameBoard[6] === user) {
+      return true;
+    }
+    if (gameBoard[4] === user && gameBoard[8] === user) {
+      return true;
+    }
+  }
+  if (gameBoard[8] === user) {
+    if (gameBoard[2] === user && gameBoard[5] === user) {
+      return true;
+    }
+    if (gameBoard[6] === user && gameBoard[7] === user) {
+      return true;
+    }
+  }
+  if (gameBoard[4] === user) {
+    if (gameBoard[1] === user && gameBoard[7] === user) {
+      return true;
+    }
+    if (gameBoard[3] === user && gameBoard[5] === user) {
+      return true;
+    }
+    if (gameBoard[2] === user && gameBoard[6] === user) {
+      return true;
+    }
+  }
+}
+
+function switchUserValue() {
+  if (user === "X") {
+    user = "O";
+  } else {
+    user = "X";
+  }
+}
 
 function hideStartScreen() {
   selectPlayerContainer.style.opacity = 0;
@@ -65,60 +112,13 @@ function hideStartScreen() {
   }, 400);
 }
 
-const playerOneSolutions = {
-  top: ["X", "X", "X", " ", " ", " ", " ", " ", " "],
-  horizontal: [" ", " ", " ", "X", "X", "X", " ", " ", " "],
-  bottom: [" ", " ", " ", " ", " ", " ", "X", "X", "X"],
-  left: ["X", " ", " ", "X", " ", " ", "X", " ", " "],
-  vertical: [" ", "X", " ", " ", "X", " ", " ", "X", " "],
-  right: [" ", " ", "X", " ", " ", "X", " ", " ", "X"],
-  diagnalLeft: ["X", " ", " ", " ", "X", " ", " ", " ", "X"],
-  diagnalRight: [" ", " ", "X", " ", "X", " ", "X", " ", " "],
-};
-
-const playerTwoSolutions = {
-  top: ["O", "O", "O", " ", " ", " ", " ", " ", " "],
-  horizontal: [" ", " ", " ", "O", "O", "O", " ", " ", " "],
-  bottom: [" ", " ", " ", " ", " ", " ", "O", "O", "O"],
-  left: ["O", " ", " ", "O", " ", " ", "O", " ", " "],
-  vertical: [" ", "O", " ", " ", "O", " ", " ", "O", " "],
-  right: [" ", " ", "O", " ", " ", "O", " ", " ", "O"],
-  diagnalLeft: ["O", " ", " ", " ", "O", " ", " ", " ", "O"],
-  diagnalRight: [" ", " ", "O", " ", "O", " ", "O", " ", " "],
-};
-
-// LOOP THROUGH GAMEBOARD CHECKING SCORE
-// function scoreTracking() {
-//   if (playerOneSolutions match) {
-//     output modal player1 wins
-// activateModal()
-//   }
-//   else if (playerTwoSolutions match) {
-//     output modal player2 wins
-// activateModal()
-//   }
-//   else {
-//     activate modal saying Tie
-// activateModal()
-//   }
-// }
-
-// Creates Reset Button that appears at the end
-// const content = document.querySelector(".close");
-// content.addEventListener("click", () => {
-//   location.reload();
-// });
-
-// function activateModal() {
-//   if (playerOne) {
-//     gameResult.textContent = "Player 1 Wins! ";
-//     modal.style.display = "block";
-//   }
-//   if (playerTwo) {
-//     gameResult.textContent = "Player 2 Wins! ";
-//     modal.style.display = "block";
-//   } else {
-//     gameResult.textContent = "Tie! ";
-//     modal.style.display = "block";
-//   }
-// }
+function activateModal() {
+  if (draw === 9) {
+    gameResult.textContent = "Tie! ";
+    draw = 0;
+    modal.style.display = "block";
+  } else {
+    gameResult.textContent = `${user} Wins! `;
+    modal.style.display = "block";
+  }
+}
